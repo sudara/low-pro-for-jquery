@@ -80,9 +80,15 @@
     delegate: function(rules) {
       return function(e) {
         var target = $(e.target);
-        for (var selector in rules) {
-          if (target.is(selector) || ((target = target.parents(selector)) && target.length > 0)) 
-            return rules[selector].apply(this, [target].concat($.makeArray(arguments)));
+        // first check the target itself
+        for(var selector in rules){
+          if (target.is(selector))
+            return rules[selector].apply(this, $.makeArray(arguments));
+        }
+        // then, jump up to parents
+        for(var selector in rules){
+          if ((target = target.parents(selector)) && target.length > 0)
+           return rules[selector].apply(this, [target].concat($.makeArray(arguments)));
         }
       }
     }
