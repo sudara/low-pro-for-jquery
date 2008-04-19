@@ -179,10 +179,18 @@
       this.options = $.extend({
         
       }, options || {});
+      this._bindCallbacks();
     },
     _makeRequest : function(options) {
       $.ajax(options);
       return false;
+    },
+    _bindCallbacks: function() {
+     var callbacks = ['beforeSend', 'complete', 'error', 'success']
+      for (var i = 0, length = callbacks.length; i < length; i++){ 
+        if (typeof this[callbacks[i]] == 'function' )
+          this.options[callbacks[i]] = $.bind(this[callbacks[i]],this);
+      }
     }
   });
   
